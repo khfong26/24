@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24 Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Make 24</h1>
+            <p class="subtitle">Use addition, subtraction, multiplication, and division to hit the magic number.</p>
+        </header>
+
+        <main id="game">
+            <div id="cards-display" class="cards-container">
+                </div>
+            
+            <div id="message-area" class="message"></div>
+
+            <div class="controls">
+                <button id="start-btn" class="btn primary">Start Game</button>
+                <button id="next-btn" class="btn primary" style="display:none;">Next Hand</button>
+                <button id="share-btn" class="btn secondary" style="display:none;">Share</button>
+                <button id="home-btn" class="btn outline" style="display:none;">Home</button>
+            </div>
+        </main>
+    </div>  
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
