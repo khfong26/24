@@ -9,20 +9,20 @@ const messageArea = document.getElementById("message-area")
 
 
 // helper function to show cards
+// helper function to show cards
 function renderCards(cardsArray, containerElement) {
-    // 1. Clear out any text or old images inside the container
     containerElement.innerHTML = ""; 
 
-    // 2. Loop through each card string from the backend
     cardsArray.forEach(cardName => {
         const img = document.createElement("img");
         
-        // Match the source path to your asset folder
-        img.src = `/static/cards/${cardName}.png`; 
+        // Convert "King of Diamonds" to "king_of_diamonds"
+        const safeFileName = cardName.toLowerCase().replace(/ /g, "_");
+        
+        img.src = `/static/cards/${safeFileName}.png`; 
         img.alt = cardName;
         img.classList.add("card");
 
-        // Append the new image element to your container
         containerElement.appendChild(img);
     });
 }
