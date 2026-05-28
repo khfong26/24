@@ -1,6 +1,6 @@
 # 24 Game 🃏
 
-**Play it live:** [Insert your Render Link Here]
+**Play it live:** [https://two4-dol7.onrender.com/](https://two4-dol7.onrender.com/)
 
 A sleek, interactive web application of the classic math puzzle game "24". The app generates four random playing cards and challenges the user to use basic arithmetic (addition, subtraction, multiplication, division) to manipulate the values so they equal exactly 24.
 
