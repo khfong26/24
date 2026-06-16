@@ -25,36 +25,46 @@ def draw_card():
     session['deck'] = deck
     return card
 
-def is_solvable(nums_list):
-    """Recursively checks if a list of numbers can make 24."""
-    # Base case: if we've combined everything into one number, check if it's 24
+def _solve_24_all(nums_list):
+    """Recursively finds ALL valid expressions that evaluate to 24."""
     if len(nums_list) == 1:
-        return math.isclose(nums_list[0], 24.0, abs_tol=1e-5)
+        final_value, final_expression = nums_list[0]
+        if math.isclose(final_value, 24.0, abs_tol=1e-5):
+            return {final_expression}
+        return set()
     
-    # Pick two numbers to combine
+    valid_solutions = set()
+    
     for i in range(len(nums_list)):
         for j in range(len(nums_list)):
             if i == j: 
                 continue
             
-            # Create a list of the numbers we DIDN'T pick
             next_round = [nums_list[k] for k in range(len(nums_list)) if k != i and k != j]
             
-            a, b = nums_list[i], nums_list[j]
+            val_a, expr_a = nums_list[i]
+            val_b, expr_b = nums_list[j]
             
-            # Try all 4 operations, replacing the two numbers with the result, and recurse
-            if is_solvable(next_round + [a + b]): return True
-            if is_solvable(next_round + [a - b]): return True
-            if is_solvable(next_round + [a * b]): return True
-            
-            # Prevent division by zero AND enforce clean, whole-number division
-            if b != 0 and a % b == 0: 
-                if is_solvable(next_round + [a / b]): return True
-                
-    return False
+            # Addition
+            valid_solutions.update(_solve_24_all(next_round + [(val_a + val_b, f"({expr_a} + {expr_b})")]))
+            # Subtraction
+            valid_solutions.update(_solve_24_all(next_round + [(val_a - val_b, f"({expr_a} - {expr_b})")]))
+            # Multiplication
+            valid_solutions.update(_solve_24_all(next_round + [(val_a * val_b, f"({expr_a} * {expr_b})")]))
+            # Division
+            if val_b != 0 and val_a % val_b == 0: 
+                valid_solutions.update(_solve_24_all(next_round + [(val_a / val_b, f"({expr_a} / {expr_b})")]))
+
+    return valid_solutions
+
+def get_all_24_solutions(cards):
+    """Wrapper function to format input and output."""
+    starting_tuples = [(num, str(num)) for num in cards]
+    solutions_set = _solve_24_all(starting_tuples)
+    return sorted(list(solutions_set))
 
 def get_four():
-    """Draws 4 cards and verifies they can make 24. Redraws if they can't."""
+    """Draws 4 cards and verifies they can make 24. Returns the cards AND their solutions."""
     while True:
         # Draw 4 cards
         cards = [draw_card() for _ in range(4)]
@@ -62,9 +72,12 @@ def get_four():
         # Extract their numerical values using our map
         numeric_values = [VALUE_MAP[card.split(" of ")[0]] for card in cards]
         
-        # If it works, break the loop and return them!
-        if is_solvable(numeric_values):
-            return cards
+        # Get the list of all possible math solutions
+        solutions = get_all_24_solutions(numeric_values)
+        
+        # If the list is not empty, it's a valid hand! Break the loop and return both.
+        if solutions:
+            return cards, solutions
 
 def share_cards():
     cards = session.get('cards', [])

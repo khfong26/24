@@ -11,14 +11,14 @@ def index():
 
 @app.route("/start")
 def start():
-    session['cards'] = get_four() # Cleaned up!
+    session['cards'], session['solutions'] = get_four() # Cleaned up!
     print("started game")
-    return jsonify({"cards": session['cards']})
+    return jsonify({"cards": session['cards'], "solutions": session['solutions']})
 
 @app.route("/next")
 def next():
-    session['cards'] = get_four() # Cleaned up!
-    return jsonify({"cards": session['cards']})
+    session['cards'], session['solutions'] = get_four() # Cleaned up!
+    return jsonify({"cards": session['cards'], "solutions": session['solutions']})
 
 @app.route("/share")
 def share():

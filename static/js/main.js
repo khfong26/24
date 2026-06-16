@@ -7,8 +7,11 @@ const homeButton = document.getElementById("home-btn")
 const cardsDisplay = document.getElementById("cards-display")
 const messageArea = document.getElementById("message-area")
 
+const solutionsButton = document.getElementById("solutions-btn")
+const solutionsContainer = document.getElementById("solutions-container");
+const solutionsList = document.getElementById("solutions-list");
 
-// helper function to show cards
+
 // helper function to show cards
 function renderCards(cardsArray, containerElement) {
     containerElement.innerHTML = ""; 
@@ -36,23 +39,63 @@ startButton.addEventListener("click", async () => {
         shareButton.style.display = "inline-block"
         startButton.style.display = "none"
         homeButton.style.display = "inline-block"
+        solutionsButton.style.display = "inline-block"
 
 
         renderCards(result.cards, cardsDisplay)
+        let solutions = result.solutions
+
+        // Clear previous solutions
+        solutionsList.innerHTML = ""
+
+        // Add new solutions to the list
+        solutions.forEach(solution => {
+            const li = document.createElement("li")
+            li.textContent = solution
+            solutionsList.appendChild(li)
+        })
+        
     } else {
         console.error("Error starting game:", response.status)
     }
 });
 
+
 nextButton.addEventListener("click", async () => {
     const response = await fetch('/next')
     if (response.ok) {
         const result = await response.json()
+        let solutions = result.solutions
         
+        solutionsContainer.style.display = "none";
+        solutionsButton.textContent = "Show Solutions";
+
         renderCards(result.cards, cardsDisplay)
+
+        // Clear previous solutions
+        solutionsList.innerHTML = ""
+        
+        // Add new solutions to the list
+        solutions.forEach(solution => {
+            const li = document.createElement("li")
+            li.textContent = solution
+            solutionsList.appendChild(li)
+        })
+
     } else {
         console.error("Error getting next card:", response.status)
     }
+});
+
+solutionsButton.addEventListener("click", async () => {
+    if (solutionsContainer.style.display === "none") {
+        solutionsContainer.style.display = "block";
+        solutionsButton.textContent = "Hide Solutions";
+    } else {
+        solutionsContainer.style.display = "none";
+        solutionsButton.textContent = "Show Solutions";
+    }
+    
 });
 
 shareButton.addEventListener("click", async () => {
